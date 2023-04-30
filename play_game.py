@@ -1,3 +1,6 @@
+import random
+
+
 progress = set()
 
 
@@ -63,7 +66,7 @@ def graphs():
         def __init__(self, name) -> None:
             self.name = name
             self.neighbors = []
-    
+
     a = Node('A')
     b = Node('B')
     c = Node('C')
@@ -107,6 +110,137 @@ def graphs():
         except (ValueError, IndexError):
             pass
     say("Congratulations! You made it out of the graph!")
+
+
+def connect4(breadth=None, depth=None, start_with_computer=False):
+    NUM_ROW = 6
+    NUM_COL = 7
+    NUM_WIN = 4
+    MCTS_BREADTH = breadth or 20
+    MCTS_DEPTH = depth or 4
+
+    class Player:
+        USER = -1
+        COMPUTER = 1
+
+        def other(player):
+            return Player.USER if player is not Player.USER else Player.COMPUTER
+
+    class Piece:
+        def __init__(self, row, col, player) -> None:
+            self.row = row
+            self.col = col
+            self.player = player
+
+        def __hash__(self) -> int:
+            return self.row + self.col*NUM_ROW
+
+        def __eq__(self, __value: object) -> bool:
+            return (self.row == __value.row
+                    and self.col == __value.col
+                    and self.player == __value.player)
+
+    class State:
+        def __init__(self) -> None:
+            self.pieces = set()
+
+        def copy(self) -> object:
+            __other = State()
+            __other.pieces = self.pieces.copy()
+            return __other
+
+        def add_piece(self, column, player) -> bool:
+            try:
+                row = 1 + max([piece.row for piece in self.pieces
+                               if piece.col == column])
+            except ValueError:
+                row = 0
+            if 0 > row or row >= NUM_ROW or 0 > column or column >= NUM_COL:
+                return False
+            piece = Piece(row, column, player)
+            if piece in self.pieces:
+                return False
+            self.pieces.add(Piece(row, column, player))
+            return True
+
+    def check_win(state) -> int | None:
+        for piece in state.pieces:
+            vert = all(Piece(piece.row, piece.col+i, piece.player)
+                       in state.pieces for i in range(NUM_WIN))
+            hori = all(Piece(piece.row+i, piece.col, piece.player)
+                       in state.pieces for i in range(NUM_WIN))
+            slant_up = all(Piece(piece.row+i, piece.col+i, piece.player)
+                           in state.pieces for i in range(NUM_WIN))
+            slant_down = all(Piece(piece.row+i, piece.col-i, piece.player)
+                             in state.pieces for i in range(NUM_WIN))
+            if vert or hori or slant_up or slant_down:
+                return piece.player
+        return None
+
+    def board_full(state) -> bool:
+        return len(state.pieces) == NUM_ROW * NUM_COL
+
+    def game_over(state) -> tuple[bool, int | None]:
+        if player := check_win(state):
+            return True, player
+        if board_full(state):
+            return True, 0
+        return False, None
+
+    def play_from_state(state, current_player) -> int:
+        for _ in range(MCTS_DEPTH):
+            stop, player = game_over(state)
+            if stop:
+                return player
+            while not state.add_piece(random.randrange(NUM_COL),
+                                      current_player):
+                pass
+            current_player = Player.other(current_player)
+        return 0
+
+    def pure_monte_carlo_search(state) -> int:
+        move_states = ((move, state.copy()) for move in range(NUM_COL))
+        move_states = filter(lambda ms: ms[1].add_piece(ms[0], Player.COMPUTER),
+                             move_states)
+        results = [(move, sum(play_from_state(next.copy(), Player.USER)
+                              for _ in range(MCTS_BREADTH)))
+                   for move, next in move_states]
+        random.shuffle(results)
+        move, value = max(results, key=lambda mv: mv[1])
+        return move
+
+    while True:
+        state = State()
+        player = Player.USER if not start_with_computer else Player.COMPUTER
+        finished, winner = game_over(state)
+        while not finished:
+            match player:
+                case Player.USER:
+                    while True:
+                        print(f"({', '.join(str(i+1) for i in range(NUM_COL))}"
+                              f") ", end='')
+                        try:
+                            move = int(input()) - 1
+                            if (0 <= move < NUM_COL
+                                and state.add_piece(move, Player.USER)):
+                                break
+                        except ValueError:
+                            pass
+                        print("Invalid move")
+                case Player.COMPUTER:
+                    move = pure_monte_carlo_search(state)
+                    print(f"Computer plays {move+1}")
+                    state.add_piece(move, Player.COMPUTER)
+            finished, winner = game_over(state)
+            player = Player.other(player)
+        match winner:
+            case Player.USER:
+                break
+            case Player.COMPUTER:
+                say("The computer beat you. Try again.")
+            case _:
+                say("The board filled up. Try again.")
+    say("Congratulations! You beat the computer!")    
 
 
 def main():

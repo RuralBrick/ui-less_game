@@ -1,0 +1,5 @@
+how about connect 4?
+
+START connect4
+
+was your opponent tough?
