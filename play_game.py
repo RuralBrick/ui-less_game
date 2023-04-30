@@ -257,7 +257,7 @@ def main():
         with open('./game_files/progress.txt') as f:
             progress = set(f.read().splitlines())
         levels = [level for level in levels if level not in progress]
-        hello, *_ = load_prompts('hello')
+        hello, *_ = load_prompts('00-hello')
         say(hello)
     except FileNotFoundError:
         progress = set()
@@ -277,7 +277,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        goodbye, *_ = load_prompts('goodbye')
+        goodbye, *_ = load_prompts('00-goodbye')
         print(f'\n{goodbye}')
     finally:
         with open(f'./game_files/progress.txt', 'w') as f:

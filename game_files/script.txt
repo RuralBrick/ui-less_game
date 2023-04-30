@@ -1,4 +1,4 @@
-intro
-mazes
-graphs
-connect4
+01-intro
+02-mazes
+03-graphs
+04-connect4
