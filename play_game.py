@@ -58,6 +58,57 @@ def mazes():
     say("Congratulations! You made it out of the maze!")
 
 
+def graphs():
+    class Node:
+        def __init__(self, name) -> None:
+            self.name = name
+            self.neighbors = []
+    
+    a = Node('A')
+    b = Node('B')
+    c = Node('C')
+    d = Node('D')
+    e = Node('E')
+    f = Node('F')
+    g = Node('G')
+    h = Node('H')
+    i = Node('I')
+    j = Node('J')
+    k = Node('K')
+    l = Node('L')
+    m = Node('M')
+    n = Node('N')
+    o = Node('O')
+
+    a.neighbors.extend([b, c])
+    b.neighbors.extend([a, c, e, g])
+    c.neighbors.extend([a, b, d])
+    d.neighbors.extend([c, f, i])
+    e.neighbors.extend([b, f, h, i, l])
+    f.neighbors.extend([d, e, h, k])
+    g.neighbors.extend([b, j])
+    h.neighbors.extend([e, f, j])
+    i.neighbors.extend([d, e, n])
+    j.neighbors.extend([g, h, m])
+    k.neighbors.extend([f, l])
+    l.neighbors.extend([e, k, o])
+    m.neighbors.extend([j])
+    n.neighbors.extend([i])
+    o.neighbors.extend([l])
+
+    pos = a
+
+    while pos is not o:
+        print(f"You are at {pos.name} "
+              f"({', '.join(str(i+1) for i in range(len(pos.neighbors)))}) ",
+              end='')
+        try:
+            pos = pos.neighbors[int(input())-1]
+        except (ValueError, IndexError):
+            pass
+    say("Congratulations! You made it out of the graph!")
+
+
 def main():
     global progress
 

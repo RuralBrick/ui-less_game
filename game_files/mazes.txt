@@ -5,3 +5,5 @@ i hope you like mazes.
 START mazes
 
 how was that?
+
+was it different than normal?
