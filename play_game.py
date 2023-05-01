@@ -240,7 +240,7 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
                 say("The computer beat you. Try again.")
             case _:
                 say("The board filled up. Try again.")
-    say("Congratulations! You beat the computer!")    
+    say("Congratulations! You beat the computer!")
 
 
 def main():
@@ -255,12 +255,14 @@ def main():
 
     try:
         with open('./game_files/progress.txt') as f:
-            progress = set(f.read().splitlines())
-        levels = [level for level in levels if level not in progress]
-        hello, *_ = load_prompts('00-hello')
-        say(hello)
+            progress = set(filter(None, f.read().splitlines()))
+        levels = filter(lambda level: level not in progress, levels)
     except FileNotFoundError:
         progress = set()
+
+    if progress:
+        hello, *_ = load_prompts('00-hello')
+        say(hello)
 
     for level in levels:
         for prompt in load_prompts(level):
