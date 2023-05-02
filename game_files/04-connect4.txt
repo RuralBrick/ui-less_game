@@ -1,4 +1,4 @@
-how about connect 4?
+how about some connect 4?
 
 START connect4
 
