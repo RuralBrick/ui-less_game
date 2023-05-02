@@ -1,3 +1,4 @@
+import sys
 import random
 
 
@@ -245,6 +246,10 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
 
 def main():
     global progress
+
+    if sys.version[:4] != '3.10':
+        print("Please rerun this script using Python 3.10")
+        return
 
     with open('./game_files/script.txt') as f:
         script = f.read()
