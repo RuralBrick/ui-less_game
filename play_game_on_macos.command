@@ -11,4 +11,5 @@ then
     python3.10 ./play_game.py
 else
     echo "Please install Python 3.10 and add it to your PATH"
+    read
 fi
