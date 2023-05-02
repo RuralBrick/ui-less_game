@@ -1,3 +1,2 @@
 @echo off
-CALL .\windows\Scripts\activate.bat
-python .\play_game.py
+.\windows\python.exe .\play_game.py
