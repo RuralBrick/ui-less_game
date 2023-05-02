@@ -6,9 +6,10 @@ Terminal, or some other black box with white text on it should pop up (and stay
 up) when you click on your respective `play_game...` file. If the game does not
 start or you get some other error, please first try installing the latest
 version of Python
-[https://www.python.org/downloads/](https://www.python.org/downloads/) and
-rerunning your `play_game...` file. If the game still does not start, please try
-some of the troubleshooting tips below.
+[https://www.python.org/downloads/](https://www.python.org/downloads/) (making
+sure to check any "Add Python 3.10 to PATH" options) and rerunning your
+`play_game...` file. If the game still does not start, please try some of the
+troubleshooting tips below.
 
 ## Windows
 
@@ -30,7 +31,7 @@ the `macos/` folder. Please run this `.pkg` file and then try running
 
 ## Debian and Ubuntu
 
-Install the approprate version of Python by opening a terminal and running
+Install the appropriate version of Python by opening a terminal and running
 ```
 sudo apt install python3.10
 ```
