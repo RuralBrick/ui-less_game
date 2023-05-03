@@ -1,3 +1,5 @@
+# TODO: Reorder in script
+
 how about some connect 4?
 
 START connect4

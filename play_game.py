@@ -244,6 +244,10 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
     say("Congratulations! You beat the computer!")
 
 
+def wumpus_world():
+    pass
+
+
 def main():
     global progress
 
@@ -261,7 +265,7 @@ def main():
     try:
         with open('./game_files/progress.txt') as f:
             progress = set(filter(None, f.read().splitlines()))
-        levels = filter(lambda level: level not in progress, levels)
+        levels = filter(lambda level: level and level not in progress, levels)
     except FileNotFoundError:
         progress = set()
 
@@ -273,11 +277,21 @@ def main():
         for prompt in load_prompts(level):
             tokens = prompt.split(' ')
             match tokens[0]:
+                case '#':
+                    pass
                 case 'START':
                     globals()[tokens[1]]()
                 case _:
                     say(prompt)
         progress.add(level)
+    
+    for prompt in load_prompts('99-outro'):
+        tokens = prompt.split(' ')
+        match tokens[0]:
+            case '#':
+                pass
+            case _:
+                say(prompt)
 
 
 if __name__ == '__main__':
