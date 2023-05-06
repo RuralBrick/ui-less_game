@@ -2,3 +2,4 @@
 02-mazes
 03-graphs
 04-connect4
+05-wumpus_world

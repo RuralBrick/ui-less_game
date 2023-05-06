@@ -3,3 +3,7 @@ go bring back some treasure now.
 do be wary of the wumpus.
 
 START wumpus_world
+
+how's the treasure?
+
+was finding it scary?

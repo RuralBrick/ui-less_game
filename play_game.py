@@ -245,7 +245,122 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
 
 
 def wumpus_world():
-    pass
+    WUMPUS_MOVE_CHANCE = 0.5
+
+    entrance = () # TODO
+    walls = set() # TODO
+    pits = set() # TODO
+
+    win = False
+
+    while not win:
+        wumpus = () # TODO
+        treasure: tuple[int, int] | None = () # TODO
+
+        pos = () # TODO
+        dir = (0, 1)
+        arrows = 3
+
+        while True:
+            x, y = pos
+            dx, dy = dir
+
+            if pos == entrance:
+                print("You are at the entrance of a cave")
+            if ((x+1,y) in pits or (x,y+1) in pits or
+                (x-1,y) in pits or (x,y-1) in pits):
+                print("You feel a gentle breeze")
+            if ((x+1,y) == wumpus or (x,y+1) == wumpus or
+                (x-1,y) == wumpus or (x,y-1) == wumpus):
+                print("You smell a putrid stench")
+            if pos == treasure:
+                print("A glitter of gold catches your eye")
+
+            prompt = ("(move forward (w), move backward (s), turn left (a), "
+                      "turn right (d), shoot (f)")
+            if pos == treasure:
+                prompt += ", grab treasure (e)"
+            if not treasure:
+                prompt += ", release treasure (q)"
+            if not treasure and pos == entrance:
+                prompt += ", climb out (r)"
+            prompt += ") "
+            match input(prompt):
+                case 'w':
+                    new_pos = (x+dx, y+dy)
+                    if new_pos == wumpus:
+                        print("Before you realize you have bumped into the "
+                              "Wumpus, it has consumed you whole.")
+                        say("(Press [enter] to continue.)")
+                        break
+                    if new_pos in pits:
+                        print("You fell into a pit.")
+                        say("(Press [enter] to continue.)")
+                        break
+                    if new_pos in walls:
+                        print("You bump into a wall and cannot move forward")
+                    else:
+                        pos = new_pos
+                case 's':
+                    new_pos = (x-dx, y-dy)
+                    if new_pos == wumpus:
+                        print("Before you realize you have bumped into the "
+                              "Wumpus, it has consumed you whole.")
+                        say("(Press [enter] to continue.)")
+                        break
+                    if new_pos in pits:
+                        print("You fell into a pit.")
+                        say("(Press [enter] to continue.)")
+                        break
+                    if new_pos in walls:
+                        print("You bump into a wall and cannot move backwards")
+                    else:
+                        pos = new_pos
+                case 'a':
+                    dir = (-dy, dx)
+                case 'd':
+                    dir = (dy, -dx)
+                case 'f':
+                    if arrows:
+                        arrow = pos
+                        while arrow not in walls:
+                            if arrow == wumpus:
+                                print("You hear an ear-splitting screech echo "
+                                      "throughout the cave")
+                                wumpus = None
+                                break
+                            ax, ay = arrow
+                            arrow = (ax+dx, ay+dy)
+                        arrows -= 1
+                    else:
+                        print("You reach for an arrow, but your quiver is "
+                              "empty")
+                case 'e' if pos == treasure:
+                    treasure = None
+                case 'q' if not treasure:
+                    treasure = pos
+                case 'r' if not treasure and pos == entrance:
+                    win = True
+                    break
+                case _:
+                    print("Invalid input")
+
+            if wumpus and random.choices(
+                [True, False],
+                weights=[WUMPUS_MOVE_CHANCE, 1-WUMPUS_MOVE_CHANCE]
+            )[0]:
+                x, y = wumpus
+                wumpus = random.choices([(x+1,y),(x-1,y),(x,y+1),(x,y-1)])[0]
+                while wumpus in walls or wumpus in pits:
+                    wumpus = random.choices([(x+1,y),(x-1,y),(x,y+1),
+                                             (x,y-1)])[0]
+                if pos == wumpus:
+                    print("Before you realize the Wumpus has bumped into you, "
+                          "it has consumed you whole.")
+                    say("(Press [enter] to continue.)")
+                    break
+
+    say("Congratulations! You brought the treasure back safely!")
 
 
 def main():
@@ -284,7 +399,7 @@ def main():
                 case _:
                     say(prompt)
         progress.add(level)
-    
+
     for prompt in load_prompts('99-outro'):
         tokens = prompt.split(' ')
         match tokens[0]:
