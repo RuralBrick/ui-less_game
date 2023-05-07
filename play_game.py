@@ -1,4 +1,5 @@
 import sys
+import re
 import random
 
 
@@ -366,8 +367,8 @@ def wumpus_world():
 def main():
     global progress
 
-    if sys.version[:4] != '3.10':
-        print("Please rerun this script using Python 3.10")
+    if not re.compile(r'3\.[1-9][0-9].*').match(sys.version):
+        print("Please rerun this script using at least Python version 3.10")
         return
 
     with open('./game_files/script.txt') as f:
