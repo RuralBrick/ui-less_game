@@ -1,9 +1,25 @@
+import signal
 import sys
 import re
 import random
 
 
 progress = set()
+
+
+def emergency_save_progress(*_):
+    global progress
+
+    try:
+        with open('./game_files/progress.txt') as f:
+            progress.update(filter(None, f.read().splitlines()))
+    except FileNotFoundError:
+        pass
+
+    with open('./game_files/progress.txt', 'w') as f:
+            f.write('\n'.join(progress) + '\n')
+
+    sys.exit(1)
 
 
 def say(*values):
@@ -385,6 +401,9 @@ def main():
     except FileNotFoundError:
         progress = set()
 
+    signal.signal(signal.SIGHUP, emergency_save_progress)
+    signal.signal(signal.SIGTERM, emergency_save_progress)
+
     if progress:
         hello, *_ = load_prompts('00-hello')
         say(hello)
@@ -417,5 +436,5 @@ if __name__ == '__main__':
         goodbye, *_ = load_prompts('00-goodbye')
         print(f'\n{goodbye}')
     finally:
-        with open(f'./game_files/progress.txt', 'w') as f:
+        with open('./game_files/progress.txt', 'w') as f:
             f.write('\n'.join(progress) + '\n')
