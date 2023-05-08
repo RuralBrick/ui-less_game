@@ -6,7 +6,7 @@ import play_game
 
 
 def main():
-    play_game.wumpus_world()
+    play_game.wumpus_world(layout='ETWX')
 
 
 if __name__ == '__main__':

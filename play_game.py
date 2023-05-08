@@ -262,10 +262,10 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
     say("Congratulations! You beat the computer!")
 
 
-def wumpus_world():
+def wumpus_world(layout=None):
     WUMPUS_MOVE_CHANCE = 0.2
 
-    layout = '''
+    layout = layout or '''
         ......XXXX
         ....XXO..TX
         ...XO...O.XXX
@@ -336,7 +336,9 @@ def wumpus_world():
                 print("A glitter of gold catches your eye")
 
             prompt = ("(move forward (w), move backward (s), turn left (a), "
-                      "turn right (d), shoot (f)")
+                      "turn right (d)")
+            if treasure:
+                prompt += ", shoot (f)"
             if pos == treasure:
                 prompt += ", grab treasure (e)"
             if not treasure:
@@ -379,7 +381,7 @@ def wumpus_world():
                     dir = (-dy, dx)
                 case 'd':
                     dir = (dy, -dx)
-                case 'f':
+                case 'f' if treasure:
                     if arrows:
                         arrow = pos
                         while arrow not in walls:
