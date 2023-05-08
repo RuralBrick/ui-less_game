@@ -434,8 +434,7 @@ def main():
 
     levels = script.splitlines()
 
-    print("(Press [enter] to continue. Press [ctrl/cmnd]-[C] to quit. If you "
-          "click the exit button, the game will not save.)")
+    print("(Press [enter] to continue. Press [ctrl/cmnd]-[C] to quit.)")
 
     try:
         with open('./game_files/progress.txt') as f:
@@ -463,6 +462,8 @@ def main():
                 case _:
                     say(prompt)
         progress.add(level)
+        with open('./game_files/progress.txt', 'a') as f:
+            f.write('\n' + level)
 
     for prompt in load_prompts('99-outro'):
         tokens = prompt.split(' ')
