@@ -7,7 +7,7 @@ up) when you click on your respective `play_game...` file. If the game does not
 start or you get some other error, please first try installing the latest
 version of Python
 [https://www.python.org/downloads/](https://www.python.org/downloads/) (making
-sure to check any "Add Python 3.10 to PATH" options) and rerunning your
+sure to check any "Add Python 3.XX to PATH" options) and rerunning your
 `play_game...` file. If the game still does not start, please try some of the
 troubleshooting tips below.
 
