@@ -1,6 +1,7 @@
 import signal
 import sys
 import re
+import os
 import random
 
 
@@ -401,7 +402,8 @@ def main():
     except FileNotFoundError:
         progress = set()
 
-    signal.signal(signal.SIGHUP, emergency_save_progress)
+    if os.name == 'posix':
+        signal.signal(signal.SIGHUP, emergency_save_progress)
     signal.signal(signal.SIGTERM, emergency_save_progress)
 
     if progress:
