@@ -393,7 +393,8 @@ def main():
 
     levels = script.splitlines()
 
-    print("(Press [enter] to continue. Press [ctrl/cmnd]-[C] to quit.)")
+    print("(Press [enter] to continue. Press [ctrl/cmnd]-[C] to quit. If you "
+          "click the exit button, the game will not save.)")
 
     try:
         with open('./game_files/progress.txt') as f:
