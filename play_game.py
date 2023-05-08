@@ -40,7 +40,7 @@ def load_prompts(name):
     return prompts
 
 
-def mazes():
+def mazes(save_game=None):
     walls = {
            (1,10),(3,10),(5,10),(7,10),(9,10),
         (0,9),      (4,9),      (8,9),(10,9),
@@ -54,7 +54,9 @@ def mazes():
         (0,1),            (6,1),      (10,1),
            (1,0),(3,0),(5,0),(7,0),(9,0),
     }
+
     pos = (1, 5)
+
     while pos != (9,5):
         print(f"You are at {chr(ord('A') + pos[0]//2)}{pos[1]//2 + 1} "
               f"(w, a, s, d) ", end='')
@@ -77,10 +79,14 @@ def mazes():
             print("You hit a wall")
             continue
         pos = new_pos
+
+    if save_game:
+        save_game()
+
     say("Congratulations! You made it out of the maze!")
 
 
-def graphs():
+def graphs(save_game=None):
     class Node:
         def __init__(self, name) -> None:
             self.name = name
@@ -128,10 +134,14 @@ def graphs():
             pos = pos.neighbors[int(input())-1]
         except (ValueError, IndexError):
             pass
+
+    if save_game:
+        save_game()
+
     say("Congratulations! You made it out of the graph!")
 
 
-def connect4(breadth=None, depth=None, start_with_computer=False):
+def connect4(breadth=None, depth=None, start_with_computer=False, save_game=None):
     NUM_ROW = 6
     NUM_COL = 7
     NUM_WIN = 4
@@ -259,10 +269,14 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
                 say("The computer beat you. Try again.")
             case _:
                 say("The board filled up. Try again.")
+
+    if save_game:
+        save_game()
+
     say("Congratulations! You beat the computer!")
 
 
-def wumpus_world(layout=None):
+def wumpus_world(layout=None, save_game=None):
     WUMPUS_MOVE_CHANCE = 0.2
 
     layout = layout or '''
@@ -421,6 +435,9 @@ def wumpus_world(layout=None):
                     say("(Press [enter] to restart.)")
                     break
 
+    if save_game:
+        save_game()
+
     say("Congratulations! You brought the treasure back safely!")
 
 
@@ -454,18 +471,20 @@ def main():
         say(hello)
 
     for level in levels:
+        def append_save():
+            progress.add(level)
+            with open('./game_files/progress.txt', 'a') as f:
+                f.write('\n' + level)
         for prompt in load_prompts(level):
             tokens = prompt.split(' ')
             match tokens[0]:
                 case '#':
                     pass
                 case 'START':
-                    globals()[tokens[1]]()
+                    globals()[tokens[1]](save_game=append_save)
                 case _:
                     say(prompt)
-        progress.add(level)
-        with open('./game_files/progress.txt', 'a') as f:
-            f.write('\n' + level)
+        append_save()
 
     for prompt in load_prompts('99-outro'):
         tokens = prompt.split(' ')
