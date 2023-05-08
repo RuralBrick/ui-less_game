@@ -34,7 +34,7 @@ def load_prompts(name):
 
     prompts = script.split('\n\n')
     prompts = [prompt.replace('\n', ' ') for prompt in prompts]
-    prompts = map(lambda prompt: prompt.strip(), prompts)
+    prompts = [prompt.strip() for prompt in prompts]
     prompts = filter(None, prompts)
 
     return prompts
@@ -263,20 +263,61 @@ def connect4(breadth=None, depth=None, start_with_computer=False):
 
 
 def wumpus_world():
-    WUMPUS_MOVE_CHANCE = 0.5
+    WUMPUS_MOVE_CHANCE = 0.2
 
-    entrance = () # TODO
-    walls = set() # TODO
-    pits = set() # TODO
+    layout = '''
+        ......XXXX
+        ....XXO..TX
+        ...XO...O.XXX
+        ...XO..O..O..X
+        ....XO......O.X
+        ...XX..OXO....X
+        ..X...XX....OX
+        ..X.OXXX.....XX
+        .X...XXXX.O....X
+        .X.OX...X..XO..X
+        .X....O.......X
+        ..X.XX...O..OX
+        ..X.XXW.O....X
+        ..X.O.....X..XX
+        .X......O.XX...X
+        XO..XO.......O..X
+        X...OXXXX.OX....X
+        X....O..XXXX..O.X
+        .XXX....XXXXX.XX
+        ....X.O.XXX...X
+        ....X...X..O..X
+        .....X.XX....X
+        .....X..O....X
+        .....X.....OX
+        ......X.E.XX
+        .......XXX
+    '''
+
+    walls = set()
+    pits = set()
+    for i, row in enumerate([line.strip() for line in layout.splitlines()]):
+        for j, cell in enumerate(row):
+            match cell:
+                case 'X':
+                    walls.add((i, j))
+                case 'O':
+                    pits.add((i, j))
+                case 'E':
+                    entrance = (i, j)
+                case 'W':
+                    den = (i, j)
+                case 'T':
+                    jackpot = (i, j)
 
     win = False
 
     while not win:
-        wumpus = () # TODO
-        treasure: tuple[int, int] | None = () # TODO
+        wumpus: tuple[int, int] | None = den
+        treasure: tuple[int, int] | None = jackpot
 
-        pos = () # TODO
-        dir = (0, 1)
+        pos = entrance
+        dir = (-1, 0)
         arrows = 3
 
         while True:
@@ -309,11 +350,11 @@ def wumpus_world():
                     if new_pos == wumpus:
                         print("Before you realize you have bumped into the "
                               "Wumpus, it has consumed you whole.")
-                        say("(Press [enter] to continue.)")
+                        say("(Press [enter] to restart.)")
                         break
                     if new_pos in pits:
                         print("You fell into a pit.")
-                        say("(Press [enter] to continue.)")
+                        say("(Press [enter] to restart.)")
                         break
                     if new_pos in walls:
                         print("You bump into a wall and cannot move forward")
@@ -324,11 +365,11 @@ def wumpus_world():
                     if new_pos == wumpus:
                         print("Before you realize you have bumped into the "
                               "Wumpus, it has consumed you whole.")
-                        say("(Press [enter] to continue.)")
+                        say("(Press [enter] to restart.)")
                         break
                     if new_pos in pits:
                         print("You fell into a pit.")
-                        say("(Press [enter] to continue.)")
+                        say("(Press [enter] to restart.)")
                         break
                     if new_pos in walls:
                         print("You bump into a wall and cannot move backwards")
@@ -375,7 +416,7 @@ def wumpus_world():
                 if pos == wumpus:
                     print("Before you realize the Wumpus has bumped into you, "
                           "it has consumed you whole.")
-                    say("(Press [enter] to continue.)")
+                    say("(Press [enter] to restart.)")
                     break
 
     say("Congratulations! You brought the treasure back safely!")

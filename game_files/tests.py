@@ -6,7 +6,7 @@ import play_game
 
 
 def main():
-    play_game.connect4(20, 4, True)
+    play_game.wumpus_world()
 
 
 if __name__ == '__main__':
