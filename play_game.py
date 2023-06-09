@@ -141,7 +141,8 @@ def graphs(save_game=None):
     say("Congratulations! You made it out of the graph!")
 
 
-def connect4(breadth=None, depth=None, start_with_computer=False, save_game=None):
+def connect4(breadth=None, depth=None, start_with_computer=False,
+             save_game=None):
     NUM_ROW = 6
     NUM_COL = 7
     NUM_WIN = 4
@@ -441,6 +442,65 @@ def wumpus_world(layout=None, save_game=None):
     say("Congratulations! You brought the treasure back safely!")
 
 
+def snakes_and_ladders(save_game=None):
+    TILES = 100
+
+    snakes = {
+        11: 6,
+        21: 5,
+        24: 18,
+        37: 27,
+        43: 38,
+        46: 23,
+        51: 48,
+        58: 44,
+        60: 41,
+        68: 33,
+        74: 67,
+        83: 42,
+        94: 57,
+        96: 13
+    }
+    ladders = {
+        8: 12,
+        9: 14,
+        15: 25,
+        30: 50,
+        39: 63,
+        45: 55,
+        49: 54,
+        56: 77,
+        65: 91,
+        69: 73,
+        79: 82,
+        87: 93
+    }
+
+    pos = 1
+
+    while pos < TILES:
+        print("(1, 2, 3, 4, 5, 6) ", end='')
+        try:
+            steps = int(input())
+        except ValueError:
+            continue
+        if not 1 <= steps <= 6:
+            continue
+        print(f"You take {steps} steps forward")
+        pos += steps
+        if pos in snakes:
+            print(f"Oh no! You slid down a {pos - snakes[pos]}-step snake!")
+            pos = snakes[pos]
+        if pos in ladders:
+            print(f"Hurray! You climbed up a {ladders[pos] - pos}-step ladder!")
+            pos = ladders[pos]
+
+    if save_game:
+        save_game()
+
+    say("Congratulations! You beat snakes and ladders!")
+
+
 def main():
     global progress
 
@@ -471,10 +531,12 @@ def main():
         say(hello)
 
     for level in levels:
+
         def append_save():
             progress.add(level)
             with open('./game_files/progress.txt', 'a') as f:
                 f.write('\n' + level)
+
         for prompt in load_prompts(level):
             tokens = prompt.split(' ')
             match tokens[0]:

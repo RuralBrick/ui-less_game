@@ -4,6 +4,6 @@ do be wary of the wumpus.
 
 START wumpus_world
 
-how's the treasure?
+it looks like you came back with a haul.
 
-was finding it scary?
+was it scary to find?

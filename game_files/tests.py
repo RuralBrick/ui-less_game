@@ -6,7 +6,7 @@ import play_game
 
 
 def main():
-    play_game.wumpus_world(layout='ETWX')
+    play_game.snakes_and_ladders()
 
 
 if __name__ == '__main__':
